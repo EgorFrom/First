@@ -1,0 +1,14 @@
+language: node_js
+node_js: lts/*
+sudo: true
+before_install:
+  - pwd
+  - export ANDROID_HOME="/opt/android"
+  - export PATH=$PATH:$ANDROID_HOME/tools
+  - export PATH=$PATH:$ANDROID_HOME/platform-tools
+cache:
+  yarn: true
+install:
+  - yarn install
+script:
+  - yarn install -g react-native-cli
