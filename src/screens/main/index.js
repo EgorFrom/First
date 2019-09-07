@@ -1,7 +1,6 @@
 // @flow
-
 import React, {PureComponent} from 'react';
-import {TextInput, View, Text, StyleSheet} from 'react-native';
+import {ScrollView, View, Text, StyleSheet, FlatList} from 'react-native';
 import {connect} from 'react-redux';
 
 const styles = StyleSheet.create({
@@ -9,6 +8,33 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  newsList: {
+    padding: 16,
+  },
+  containerNewsItem: {
+    marginBottom: 8,
+    padding: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.1)',
+  },
+  flex1: {
+    flex: 1,
+  },
+  title: {
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.1)',
+    marginBottom: 4,
+    paddingBottom: 4,
+  },
+  titleText: {
+    fontWeight: '500',
+    fontSize: 16,
+  },
+  underlineData: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
 
@@ -20,29 +46,41 @@ class Main extends PureComponent<Props> {
     this.state = {text: 'Useless Placeholder'};
   }
 
+  newsItem = item => (
+    <View style={styles.containerNewsItem}>
+      <View style={styles.title}>
+        <Text style={styles.titleText}>{item.title}</Text>
+      </View>
+      <View style={styles.underlineData}>
+        <View>
+          <Text>{item.publishedAt}</Text>
+        </View>
+        <View>
+          <Text>{item.source.name}</Text>
+        </View>
+      </View>
+    </View>
+  );
+
   render() {
     const {news} = this.props;
-    console.log('news', news);
     return (
       <View style={styles.mainScreen}>
-        <Text>Cheln</Text>
-        <TextInput
-          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-          onChangeText={text => this.setState({text})}
-          value={this.state.text}
-        />
-        <TextInput
-          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-          onChangeText={() => {}}
-          value={news.length}
-        />
+        <ScrollView>
+          <FlatList
+            keyExtractor={(item, index) => `${item.publishedAt}_${index}`}
+            style={styles.newsList}
+            data={news}
+            renderItem={({item}) => this.newsItem(item)}
+          />
+        </ScrollView>
       </View>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  news: state.news,
+  news: state.news.news,
 });
 
 const mapDispatchToProps = () => ({});

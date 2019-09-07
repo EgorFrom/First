@@ -1,22 +1,14 @@
-import {put, call} from 'redux-saga/effects';
+import {put} from 'redux-saga/effects';
 
 import {fetchNewsFulfilled} from '../actions';
 
-import {fetchNewsRequest} from './interactor';
 export function* newsSaga() {
   try {
-    const obj = yield call(fetchNewsRequest);
-    let oooo = {};
-    obj.then(data => {
-      console.log('daaata', data);
-      oooo = data;
-    });
-    console.log('oooo', oooo);
-    console.log('objobj', obj);
-    console.log('articlesarticles', obj.articles);
-    yield put(fetchNewsFulfilled({news: obj.articles}));
+    const request = yield fetch(
+      'https://newsapi.org/v2/top-headlines?country=ru&apiKey=48f1c58083ef41e88b7a46bdb2f7d738',
+    ).then(response => response.json());
+    yield put(fetchNewsFulfilled(request.articles));
   } catch (error) {
-    console.log('errrrrror');
     yield put(fetchNewsFulfilled({}));
   }
 }
